@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Social Studio — Cuemath</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+  <!-- Toast notification -->
+  <div id="toast" class="toast"></div>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <div class="brand-icon">◈</div>
+      <span class="brand-name">Social Studio</span>
+      <span class="brand-tag">by Cuemath</span>
+    </div>
+    <div class="navbar-actions">
+      <button class="nav-btn" onclick="exportSlides()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
+          <polyline points="7 10 12 15 17 10" />
+          <line x1="12" y1="15" x2="12" y2="3" />
+        </svg>
+        Export PNGs
+      </button>
+    </div>
+  </nav>
+
+  <!-- Main layout -->
+  <div class="app">
+
+    <!-- ── LEFT PANEL ── -->
+    <aside class="panel-left">
+
+      <!-- Input mode toggle -->
+      <div class="section-label">Input Mode</div>
+      <div class="mode-tabs">
+        <button class="mode-btn active" data-mode="idea" onclick="setMode('idea')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path
+              d="M12 2a7 7 0 017 7c0 2.38-1.19 4.47-3 5.74V17a2 2 0 01-2 2H10a2 2 0 01-2-2v-2.26C6.19 13.47 5 11.38 5 9a7 7 0 017-7z" />
+            <line x1="10" y1="21" x2="14" y2="21" />
+          </svg>
+          Idea
+        </button>
+        <button class="mode-btn" data-mode="file" onclick="setMode('file')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+            <polyline points="14 2 14 8 20 8" />
+          </svg>
+          Upload
+        </button>
+      </div>
+
+      <!-- Format selector -->
+      <div class="section-label" style="margin-top:20px">Format</div>
+      <div class="format-tabs">
+        <button class="format-btn active" data-format="carousel" onclick="setFormat('carousel')">
+          <span class="fmt-icon">⬛⬛⬛</span>
+          <span>Carousel</span>
+          <span class="fmt-sub">1:1 multi</span>
+        </button>
+        <button class="format-btn" data-format="story" onclick="setFormat('story')">
+          <span class="fmt-icon">▬</span>
+          <span>Story</span>
+          <span class="fmt-sub">9:16 vertical</span>
+        </button>
+        <button class="format-btn" data-format="post" onclick="setFormat('post')">
+          <span class="fmt-icon">⬛</span>
+          <span>Post</span>
+          <span class="fmt-sub">1:1 single</span>
+        </button>
+      </div>
+
+      <!-- Idea input -->
+      <div id="ideaMode" class="input-section">
+        <div class="section-label" style="margin-top:20px">Your Idea</div>
+        <textarea id="idea" class="idea-input"
+          placeholder="e.g. Carousel for parents about why kids forget what they learn — explain the forgetting curve — end with how spaced repetition fixes it"
+          rows="5"></textarea>
+
+        <div class="example-prompts">
+          <div class="section-label" style="font-size:10px;margin-bottom:6px">Try an example:</div>
+          <button class="example-chip" onclick="fillExample(0)">🧠 Forgetting curve</button>
+          <button class="example-chip" onclick="fillExample(1)">✏️ Dyscalculia signs</button>
+          <button class="example-chip" onclick="fillExample(2)">🎯 Growth mindset</button>
+        </div>
+
+        <button class="btn-primary" onclick="generate()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polygon points="5 3 19 12 5 21 5 3" />
+          </svg>
+          Generate
+        </button>
+      </div>
+
+      <!-- File upload -->
+      <div id="fileMode" class="input-section" style="display:none">
+        <div class="section-label" style="margin-top:20px">Upload Document</div>
+        <label class="file-drop" id="fileDrop">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
+            <polyline points="17 8 12 3 7 8" />
+            <line x1="12" y1="3" x2="12" y2="15" />
+          </svg>
+          <span>Drop PDF or TXT here</span>
+          <span class="file-sub">or click to browse</span>
+          <input type="file" id="fileInput" accept=".pdf,.txt" style="display:none" onchange="handleFileSelect(this)" />
+        </label>
+        <div id="fileName" class="file-name-display" style="display:none"></div>
+
+        <button class="btn-primary" onclick="uploadFile()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polygon points="5 3 19 12 5 21 5 3" />
+          </svg>
+          Convert to Slides
+        </button>
+      </div>
+
+      <!-- Rewrite toolbar (shown after generation) -->
+      <div class="rewrite-section" id="rewriteSection" style="display:none">
+        <div class="divider"></div>
+        <div class="section-label">Refine Content</div>
+        <input type="text" id="rewriteInstruction" class="rewrite-input"
+          placeholder='e.g. "make it more playful" or "add more urgency"' />
+        <button class="btn-secondary" onclick="rewriteContent()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M23 4v6h-6" />
+            <path d="M1 20v-6h6" />
+            <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15" />
+          </svg>
+          Rewrite All
+        </button>
+      </div>
+
+    </aside>
+
+    <!-- ── CENTER PREVIEW ── -->
+    <main class="panel-center">
+      <div class="preview-header" id="previewHeader" style="display:none">
+        <h2 class="carousel-title" id="carouselTitle"></h2>
+        <span class="slide-count" id="slideCount"></span>
+      </div>
+
+      <div id="preview" class="preview-area">
+        <!-- Empty state -->
+        <div class="empty-state">
+          <div class="empty-icon">
+            <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+              <rect x="3" y="3" width="18" height="18" rx="3" />
+              <path d="M8 12h8M12 8v8" />
+            </svg>
+          </div>
+          <h3>Your canvas is empty</h3>
+          <p>Type an idea or upload a document to generate your first carousel, story, or post.</p>
+          <div class="empty-hints">
+            <span>✦ Multi-slide carousels</span>
+            <span>✦ Vertical stories</span>
+            <span>✦ Single posts</span>
+          </div>
+        </div>
+      </div>
+    </main>
+
+  </div>
+
+  <script type="module" src="script.js"></script>
+  <script>
+    // Example prompts
+    const EXAMPLES = [
+      "Carousel for parents about why kids forget what they learn — explain the forgetting curve — end with how spaced repetition fixes it",
+      "Story for parents: 5 signs your child might have dyscalculia (math learning difficulty) — what to watch for and what to do",
+      "Post about growth mindset vs fixed mindset in children — how parents can build a love of learning at home",
+    ];
+
+    window.fillExample = (i) => {
+      document.getElementById("idea").value = EXAMPLES[i];
+    };
+
+    window.handleFileSelect = (input) => {
+      const file = input.files[0];
+      if (file) {
+        const el = document.getElementById("fileName");
+        el.textContent = `📄 ${file.name}`;
+        el.style.display = "block";
+      }
+    };
+
+    // Show rewrite section after generation
+    const origGenerate = window.generate;
+    document.addEventListener("DOMContentLoaded", () => {
+      // File drop UX
+      const drop = document.getElementById("fileDrop");
+      drop?.addEventListener("click", () => document.getElementById("fileInput").click());
+    });
+
+    // Observe preview for content changes → show rewrite panel
+    const observer = new MutationObserver(() => {
+      const hasSlides = document.querySelector(".slide-wrapper");
+      const rewriteSection = document.getElementById("rewriteSection");
+      const previewHeader = document.getElementById("previewHeader");
+      if (rewriteSection) rewriteSection.style.display = hasSlides ? "block" : "none";
+      if (previewHeader) previewHeader.style.display = hasSlides ? "flex" : "none";
+    });
+    observer.observe(document.getElementById("preview") || document.body, { childList: true, subtree: true });
+  </script>
+</body>
+
+</html>
