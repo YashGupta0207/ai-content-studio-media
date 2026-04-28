@@ -2,7 +2,7 @@
 
 **Social Studio** is an AI-powered content generation platform designed for ed-tech social media strategists. It helps transform educational ideas or documents into engaging, high-performance social media posts, carousels, and stories.
 
-![Project Preview](https://via.placeholder.com/1200x600.png?text=Social+Studio+Preview+Placeholder)
+![Project Preview]([https://via.placeholder.com/1200x600.png?text=Social+Studio+Preview+Placeholder](https://ai-content-studio-media.onrender.com/))
 
 ## 🚀 Features
 
